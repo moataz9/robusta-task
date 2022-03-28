@@ -1,69 +1,68 @@
 <template>
-  <div></div>
+  <div id="app">
+    <AppHeader app-name="instaweather"></AppHeader>
+    <AppInfo
+      appTown="new Cairo"
+      iconSource="@/assets/images/test-icon.png"
+      weatherDescription="this weather desc"
+      degree="30"
+      dayDegree="30"
+      nightDegree="20"
+      dayStatus="the weather is coludy"
+    ></AppInfo>
+  </div>
 </template>
 
-<script setup>
+<script>
+import AppInfo from './components/AppInfo.vue'
+import AppHeader from './components/AppHeader.vue'
+// App.vue
+export default {
+  name: 'App',
+  components: { AppInfo, AppHeader },
+  data() {
+    return {
+      lat: null,
+      long: null,
+      api_key: 'a177f8481c31fa96c3f95ad4f4f84610',
+    }
+  },
+  methods: {
+    getList() {
+      this.axios
+        .get(`https://api.darksky.net/forecast/${this.api_key}/${lat}, ${long}`)
+        .then(response => {
+          console.log(response.data)
+        })
+      // or
+      this.$http
+        .get(`https://api.darksky.net/forecast/${this.api_key}/${lat}, ${long}`)
+        .then(response => {
+          console.log(response.data)
+        })
+    },
+  },
+  created() {
+    if (navigator.geolocation) {
+      let data =  navigator.geolocation.getCurrentPosition()
+      this.lat = data.coords.latitude
+      this.long = data.coords.longitude
+    }
+    console.log(lat, long);
+  },
+}
 </script>
 
-<style>
-@import './assets/base.css';
+<style lang="scss">
+body {
+  background-image: url('./assets/images/Background.png');
+  font-family: 'Work Sans';
+}
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
-}
-
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
+  @media (min-width: 787px) {
+    max-width: 90%;
+    margin: 0 auto;
   }
 }
 </style>
