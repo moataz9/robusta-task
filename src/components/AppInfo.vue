@@ -3,7 +3,7 @@
     <div class="left">
       <h2 class="town">{{ appTown }}</h2>
       <div class="date">{{ new Date().toDateString() }}</div>
-      <img class="weather-icon" src="@/assets/images/test-icon.png" />
+      <img class="weather-icon" :src="iconSource" />
       <div class="weather-description">{{ weatherDescription }}</div>
     </div>
     <!--  -->
@@ -68,7 +68,8 @@ export default {
     }
     .weather-icon {
       margin-top: 15px;
-      max-width: 200px;
+      max-width: 250px;
+      width: 200px;
     }
     .weather-description {
       font-size: 30px;

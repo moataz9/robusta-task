@@ -2,13 +2,13 @@
   <div id="app">
     <AppHeader app-name="instaweather"></AppHeader>
     <AppInfo
-      appTown="new Cairo"
-      iconSource="@/assets/images/test-icon.png"
-      weatherDescription="this weather desc"
-      degree="30"
-      dayDegree="30"
-      nightDegree="20"
-      dayStatus="the weather is coludy"
+      :appTown="data.name"
+      :iconSource="`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`"
+      :weatherDescription="data.weather[0].description"
+      :degree="data.main.temp"
+      :dayDegree="data.main.temp_max"
+      :nightDegree="data.main.temp_min"
+      :dayStatus="data.weather[0].main"
     ></AppInfo>
   </div>
 </template>
@@ -16,6 +16,7 @@
 <script>
 import AppInfo from './components/AppInfo.vue'
 import AppHeader from './components/AppHeader.vue'
+
 // App.vue
 export default {
   name: 'App',
@@ -23,32 +24,35 @@ export default {
   data() {
     return {
       lat: null,
-      long: null,
-      api_key: 'a177f8481c31fa96c3f95ad4f4f84610',
+      lon: null,
+      open_weather_api_key: '41c096cea92a482759e884f2e05ae7e5',
+      data: null,
     }
   },
   methods: {
-    getList() {
-      this.axios
-        .get(`https://api.darksky.net/forecast/${this.api_key}/${lat}, ${long}`)
-        .then(response => {
-          console.log(response.data)
-        })
-      // or
-      this.$http
-        .get(`https://api.darksky.net/forecast/${this.api_key}/${lat}, ${long}`)
-        .then(response => {
-          console.log(response.data)
-        })
+    async getData() {
+      try {
+        const data = await (
+          await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&appid=${this.open_weather_api_key}`
+          )
+        ).json()
+
+        // console.log(data)
+        this.data = data
+      } catch (err) {
+        console.log(err)
+      }
     },
   },
   created() {
     if (navigator.geolocation) {
-      let data =  navigator.geolocation.getCurrentPosition()
-      this.lat = data.coords.latitude
-      this.long = data.coords.longitude
+      navigator.geolocation.getCurrentPosition(position => {
+        this.lat = position.coords.latitude
+        this.lon = position.coords.longitude
+        this.getData()
+      })
     }
-    console.log(lat, long);
   },
 }
 </script>
@@ -56,7 +60,11 @@ export default {
 <style lang="scss">
 body {
   background-image: url('./assets/images/Background.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   font-family: 'Work Sans';
+  min-height: 100vh;
 }
 
 #app {
