@@ -2,6 +2,7 @@
   <div id="app">
     <AppHeader app-name="instaweather"></AppHeader>
     <AppInfo
+      v-if="data"
       :appTown="data.name"
       :iconSource="`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`"
       :weatherDescription="data.weather[0].description"
