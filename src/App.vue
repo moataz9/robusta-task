@@ -26,6 +26,7 @@ export default {
     return {
       lat: null,
       lon: null,
+      open_weather_url: 'https://api.openweathermap.org/data/2.5/weather',
       open_weather_api_key: '41c096cea92a482759e884f2e05ae7e5',
       data: null,
     }
@@ -33,14 +34,11 @@ export default {
   methods: {
     async getData() {
       try {
-        const data = await (
+        this.data = await (
           await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&appid=${this.open_weather_api_key}`
+            `${this.open_weather_url}?lat=${this.lat}&lon=${this.lon}&appid=${this.open_weather_api_key}`
           )
         ).json()
-
-        // console.log(data)
-        this.data = data
       } catch (err) {
         console.log(err)
       }
