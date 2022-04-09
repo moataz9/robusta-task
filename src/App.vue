@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <AppHeader app-name="instaweather"></AppHeader>
+    <AppHeader app-name="instaweather" @deg="temp_unit = $event" :active-btn="temp_unit"></AppHeader>
     <AppInfo
-      v-if="data"
-      :appTown="data.name"
-      :iconSource="`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`"
-      :weatherDescription="data.weather[0].description"
-      :degree="data.main.temp"
-      :dayDegree="data.main.temp_max"
-      :nightDegree="data.main.temp_min"
-      :dayStatus="data.weather[0].main"
+      v-if="weather_data"
+      :appTown="weather_data.name"
+      :iconSource="`http://openweathermap.org/img/wn/${weather_data.weather[0].icon}@2x.png`"
+      :weatherDescription="weather_data.weather[0].description"
+      :degree="weather_data.main.temp"
+      :dayDegree="weather_data.main.temp_max"
+      :nightDegree="weather_data.main.temp_min"
+      :dayStatus="weather_data.weather[0].main"
     ></AppInfo>
   </div>
 </template>
@@ -28,15 +28,18 @@ export default {
       lon: null,
       open_weather_url: 'https://api.openweathermap.org/data/2.5/weather',
       open_weather_api_key: '41c096cea92a482759e884f2e05ae7e5',
-      data: null,
+      weather_data: null,
+      temp_unit: 'f',
     }
   },
   methods: {
-    async getData() {
+    async getWeatherData() {
       try {
-        this.data = await (
+        this.weather_data = await (
           await fetch(
-            `${this.open_weather_url}?lat=${this.lat}&lon=${this.lon}&appid=${this.open_weather_api_key}`
+            `${this.open_weather_url}?lat=${this.lat}&lon=${this.lon}&appid=${
+              this.open_weather_api_key
+            }${this.temp_unit === 'c' ? '&units=metric' : ''}`
           )
         ).json()
       } catch (err) {
@@ -49,9 +52,14 @@ export default {
       navigator.geolocation.getCurrentPosition(position => {
         this.lat = position.coords.latitude
         this.lon = position.coords.longitude
-        this.getData()
+        this.getWeatherData()
       })
     }
+  },
+  watch: {
+    temp_unit() {
+      this.getWeatherData()
+    },
   },
 }
 </script>

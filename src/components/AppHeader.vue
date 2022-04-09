@@ -2,8 +2,8 @@
   <div class="app-header">
     <h1 class="app-name">{{ appName }}</h1>
     <div class="c-and-f">
-      <button class="c-deg">℃</button>
-      <button class="f-deg active">℉</button>
+      <button :class="`c-deg ${activeBtn === 'c' ? 'active' : ''}`" @click="$emit('deg', 'c')">℃</button>
+      <button :class="`f-deg ${activeBtn === 'f' ? 'active' : ''}`" @click="$emit('deg', 'f')">℉</button>
     </div>
   </div>
 </template>
@@ -15,7 +15,12 @@ export default {
       type: String,
       required: true,
     },
+    activeBtn: {
+      type: String,
+      required: true
+    }
   },
+  emits: ['deg']
 }
 </script>
 
