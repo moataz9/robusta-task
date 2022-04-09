@@ -33,15 +33,15 @@ export default {
       requierd: true,
     },
     degree: {
-      type: String,
+      type: [String, Number],
       requierd: true,
     },
     dayDegree: {
-      type: String,
+      type: [String, Number],
       requierd: true,
     },
     nightDegree: {
-      type: String,
+      type: [String, Number],
       requierd: true,
     },
     dayStatus: {
